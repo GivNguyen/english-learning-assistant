@@ -1,7 +1,14 @@
+'use client'
+
+import Messages from "@/components/Messages";
+import Recorder from "@/components/Recorder";
 import { SettingsIcon } from "lucide-react";
 import Image from "next/image";
+import { useRef } from "react";
 
 export default function Home() {
+  const fileRef = useRef<HTMLInputElement | null>(null)
+  const submitButtonRef = useRef<HTMLButtonElement | null>(null)
   return (
     <main className="bg-cyan-500 h-screen overflow-y-auto">
       {/* {Header} */}
@@ -20,15 +27,20 @@ export default function Home() {
       </header>
       {/* {Form} */}
       <form className="flex flex-col bg-black">
-        <div className="">
+        <div className="flex-1 bg-gradient-to-b from-cyan-500 to-black">
           {/* message */}
+          <Messages />
         </div>
         {/* hidden field */}
-        <input type="file"/>
-        <button type="submit" hidden></button>
-        <div>
+        <input type="file" hidden ref={fileRef}/>
+        <button type="submit" hidden ref={submitButtonRef} />
+        <div className="fixed bottom-0 w-full overflow-hidden bg-black rounded-t-3xl">
           {/* Recorder */}
-          {/* Voice Synthesiser - output of the Assistant voice */}
+          <Recorder/>
+          <div>
+            {/* Voice Synthesiser - output of the Assistant voice */}
+          </div>
+          
         </div>
       </form>
     </main>
