@@ -1,7 +1,7 @@
 'use client'
 
 import Messages from "@/components/Messages";
-import Recorder from "@/components/Recorder";
+import Recorder, { mimeType } from "@/components/Recorder";
 import { SettingsIcon } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
@@ -9,6 +9,22 @@ import { useRef } from "react";
 export default function Home() {
   const fileRef = useRef<HTMLInputElement | null>(null)
   const submitButtonRef = useRef<HTMLButtonElement | null>(null)
+
+  const uploadAudio = (blob: Blob) => {
+    const url = URL.createObjectURL(blob);
+    const file = new File([blob], 'audio.webm', { type: mimeType });
+    //set the file as the value of the hidden file input field
+    if (fileRef.current){
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file)
+      fileRef.current.files = dataTransfer.files;
+      //simulate a click & submit the form
+      if (submitButtonRef.current){
+        submitButtonRef.current.click();
+      }
+    }
+  }
+
   return (
     <main className="bg-cyan-500 h-screen overflow-y-auto">
       {/* {Header} */}
@@ -32,11 +48,11 @@ export default function Home() {
           <Messages />
         </div>
         {/* hidden field */}
-        <input type="file" hidden ref={fileRef}/>
+        <input type="file" name="audio" hidden ref={fileRef}/>
         <button type="submit" hidden ref={submitButtonRef} />
         <div className="fixed bottom-0 w-full overflow-hidden bg-black rounded-t-3xl">
           {/* Recorder */}
-          <Recorder/>
+          <Recorder uploadAudio={uploadAudio}/>
           <div>
             {/* Voice Synthesiser - output of the Assistant voice */}
           </div>
