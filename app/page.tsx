@@ -42,7 +42,7 @@ export default function Home() {
         />
       </header>
       {/* {Form} */}
-      <form className="flex flex-col bg-black">
+      <form action={formAction} className="flex flex-col bg-black">
         <div className="flex-1 bg-gradient-to-b from-cyan-500 to-black">
           {/* message */}
           <Messages />
