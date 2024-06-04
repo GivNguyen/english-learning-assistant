@@ -1,14 +1,24 @@
 'use client'
 
+import transctipt from "@/actions/transcript";
 import Messages from "@/components/Messages";
 import Recorder, { mimeType } from "@/components/Recorder";
 import { SettingsIcon } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
+import { useFormState } from "react-dom";
+
+const initialState = {
+  sender: "",
+  response: "",
+  id: "",
+}
+
 
 export default function Home() {
-  const fileRef = useRef<HTMLInputElement | null>(null)
-  const submitButtonRef = useRef<HTMLButtonElement | null>(null)
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  const submitButtonRef = useRef<HTMLButtonElement | null>(null);
+  const [state, formAction] = useFormState(transctipt, initialState);
 
   const uploadAudio = (blob: Blob) => {
     const url = URL.createObjectURL(blob);
