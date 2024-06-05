@@ -3,11 +3,14 @@
 import { 
     AzureKeyCredential,
     ChatRequestMessage,
+    ChatRequestMessageUnion,
     OpenAIClient
 } from "@azure/openai";
 
 async function transctipt(prevState: any, formData: FormData) {
     console.log("PREVIOUS STATE:", prevState);
+
+    const id = Math.random().toString(36);
 
     if (
         process.env.AZURE_API_KEY === undefined ||
@@ -34,13 +37,44 @@ async function transctipt(prevState: any, formData: FormData) {
     const arrayBuffer = await file.arrayBuffer()
     const audio = new Uint8Array(arrayBuffer)
 
-    // get audio transciption from azure whisper AI service
-    console.log("== Transcibe Audio Sample")
+    // get audio transciption from azure whisper AI service (client server)
+    console.log("== Transcibe Audio Sample ==")
 
     const client = new OpenAIClient(
         process.env.AZURE_ENDPOINT,
         new AzureKeyCredential(process.env.AZURE_API_KEY)
     )
+
+    const result = await client.getAudioTranscription(
+        process.env.AZURE_DEPLOYMENT_NAME,
+        audio
+    )
+
+    console.log(`Transcription: ${result.text}`)
+
+    // get chat completion from azure OpenAI (server server)
+    const messages: ChatRequestMessageUnion[] = [
+        {
+            role: "system",
+            content: "You are a helpful assistant. You will answer questions and reply I cannot answer that if you dont know the answer.",
+        },
+        {
+            role: "user",
+            content: result.text,
+        }
+    ]
+    const completion = await client.getChatCompletions(
+        process.env.AZURE_DEPLOYMENT_COMPLETIONS_NAME,
+        messages,
+        { maxTokens: 128 }
+    )
+    const response = completion.choices[0].message?.content
+    console.log(prevState.sender, "+++", result.text)
+    return {
+        sender: result.text,
+        response: response,
+        id
+    }
 }
 
 export default transctipt;
