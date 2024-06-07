@@ -1,5 +1,6 @@
 import { Message } from "@/app/page"
 import { ChevronDownCircle } from "lucide-react"
+import LoadingMessage from "./LoadingMessage";
 
 interface Props {
     messages: Message[];
@@ -11,6 +12,7 @@ function Messages({ messages }: Props) {
         messages.length > 0 ? "pb-96" : "pb-52"
     }`}
     >
+        <LoadingMessage/>
         {!messages.length && (
             <div className="flex flex-col space-y-10 flex-1 items-center justify-end pl-6">
                 <p className="text-gray-500 animate-pulse">
@@ -22,9 +24,9 @@ function Messages({ messages }: Props) {
                 />
             </div>
         )}
-        <div className="p-5">
+        <div className="p-5 space-y-5">
             {messages.map(message => (
-                <div key={message.id}>
+                <div key={message.id} className="space-y-5">
                     {/* reciever */}
                     <div className="pr-48">
                         <p className="message bg-gray-800 rounded-bl-none">

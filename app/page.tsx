@@ -3,6 +3,7 @@
 import transctipt from "@/actions/transcript";
 import Messages from "@/components/Messages";
 import Recorder, { mimeType } from "@/components/Recorder";
+import VoiceSynthesiser from "@/components/VoiceSynthesiser";
 import { SettingsIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -24,7 +25,8 @@ export default function Home() {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const submitButtonRef = useRef<HTMLButtonElement | null>(null);
   const [state, formAction] = useFormState(transctipt, initialState);
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [displaySettings, setDisplaySettings] = useState(false)
 
   useEffect(() => {
     if(state.response && state.sender && state.id) {
@@ -68,6 +70,7 @@ export default function Home() {
           className="p-2 m-2 rounded-full cursor-pointer bg-cyan-600
           text-black transition-all ease-in-out duration-150
           hover:bg-cyan-700 hover:text-white"
+          onClick={() => setDisplaySettings(!displaySettings)}
         />
       </header>
       {/* {Form} */}
@@ -84,6 +87,10 @@ export default function Home() {
           <Recorder uploadAudio={uploadAudio}/>
           <div>
             {/* Voice Synthesiser - output of the Assistant voice */}
+            <VoiceSynthesiser
+              state={state}
+              displaySettings={displaySettings}
+            />
           </div>
           
         </div>
