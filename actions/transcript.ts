@@ -3,7 +3,6 @@
 import { 
     AzureKeyCredential,
     ChatRequestMessage,
-    ChatRequestMessageUnion,
     OpenAIClient
 } from "@azure/openai";
 
@@ -53,7 +52,7 @@ async function transctipt(prevState: any, formData: FormData) {
     console.log(`Transcription: ${result.text}`)
 
     // get chat completion from azure OpenAI (server server)
-    const messages: ChatRequestMessageUnion[] = [
+    const messages: ChatRequestMessage[] = [
         {
             role: "system",
             content: "You are a helpful assistant. You will answer questions and reply I cannot answer that if you dont know the answer.",
